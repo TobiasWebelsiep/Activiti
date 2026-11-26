@@ -25,7 +25,6 @@ import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.EventDefinition;
 import org.activiti.bpmn.model.EventSubProcess;
 import org.activiti.bpmn.model.FlowElement;
-import org.activiti.bpmn.model.Message;
 import org.activiti.bpmn.model.MessageEventDefinition;
 import org.activiti.bpmn.model.Process;
 import org.activiti.bpmn.model.StartEvent;
@@ -176,9 +175,11 @@ public class ProcessInstanceHelper {
                         break;
                     }
                     // FIXME: We should not need to reset eventDefinition messageRef to message name
-                    else if (bpmnModel.containsMessageId(messageRef)) {
-                        Message message = bpmnModel.getMessage(messageRef);
-                        messageEventDefinition.setMessageRef(message.getName());
+                    else if (
+                        bpmnModel.containsMessageId(messageRef) &&
+                        messageName.equals(bpmnModel.getMessage(messageRef).getName())
+                    ) {
+                        messageEventDefinition.setMessageRef(messageName);
                         initialFlowElement = flowElement;
                         break;
                     }

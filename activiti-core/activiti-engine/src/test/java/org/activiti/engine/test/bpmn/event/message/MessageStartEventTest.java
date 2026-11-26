@@ -240,6 +240,29 @@ public class MessageStartEventTest extends PluggableActivitiTestCase {
         assertProcessEnded(processInstance.getId());
     }
 
+    @Deployment
+    public void testMultipleMessageStartEventsWithMessageIdAsName() {
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByMessage("secondMessage");
+
+        assertThat(
+            taskService
+                .createTaskQuery()
+                .processInstanceId(processInstance.getId())
+                .singleResult()
+                .getTaskDefinitionKey()
+        ).isEqualTo("taskAfterSecondMessageStart");
+
+        processInstance = runtimeService.startProcessInstanceByMessage("firstMessage");
+
+        assertThat(
+            taskService
+                .createTaskQuery()
+                .processInstanceId(processInstance.getId())
+                .singleResult()
+                .getTaskDefinitionKey()
+        ).isEqualTo("taskAfterFirstMessageStart");
+    }
+
     @Deployment(
         resources = "org/activiti/engine/test/bpmn/event/message/MessageStartEventTest.testSingleMessageStartEvent.bpmn20.xml"
     )
