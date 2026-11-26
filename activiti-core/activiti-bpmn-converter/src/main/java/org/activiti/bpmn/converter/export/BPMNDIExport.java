@@ -21,9 +21,7 @@ import org.activiti.bpmn.constants.BpmnXMLConstants;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.FlowElement;
 import org.activiti.bpmn.model.GraphicInfo;
-import org.activiti.bpmn.model.MessageFlow;
 import org.activiti.bpmn.model.SubProcess;
-import org.apache.commons.lang3.StringUtils;
 
 public class BPMNDIExport implements BpmnXMLConstants {
 
@@ -68,6 +66,8 @@ public class BPMNDIExport implements BpmnXMLConstants {
                 xtw.writeAttribute(ATTRIBUTE_DI_Y, "" + graphicInfo.getY());
                 xtw.writeEndElement();
 
+                writeLabel(model.getLabelGraphicInfo(elementId), xtw);
+
                 xtw.writeEndElement();
             }
         }
@@ -90,36 +90,27 @@ public class BPMNDIExport implements BpmnXMLConstants {
                     xtw.writeEndElement();
                 }
 
-                GraphicInfo labelGraphicInfo = model.getLabelGraphicInfo(elementId);
-                FlowElement flowElement = model.getFlowElement(elementId);
-                MessageFlow messageFlow = null;
-                if (flowElement == null) {
-                    messageFlow = model.getMessageFlow(elementId);
-                }
-
-                boolean hasName = false;
-                if (flowElement != null && StringUtils.isNotEmpty(flowElement.getName())) {
-                    hasName = true;
-                } else if (messageFlow != null && StringUtils.isNotEmpty(messageFlow.getName())) {
-                    hasName = true;
-                }
-
-                if (labelGraphicInfo != null && hasName) {
-                    xtw.writeStartElement(BPMNDI_PREFIX, ELEMENT_DI_LABEL, BPMNDI_NAMESPACE);
-                    xtw.writeStartElement(OMGDC_PREFIX, ELEMENT_DI_BOUNDS, OMGDC_NAMESPACE);
-                    xtw.writeAttribute(ATTRIBUTE_DI_HEIGHT, "" + labelGraphicInfo.getHeight());
-                    xtw.writeAttribute(ATTRIBUTE_DI_WIDTH, "" + labelGraphicInfo.getWidth());
-                    xtw.writeAttribute(ATTRIBUTE_DI_X, "" + labelGraphicInfo.getX());
-                    xtw.writeAttribute(ATTRIBUTE_DI_Y, "" + labelGraphicInfo.getY());
-                    xtw.writeEndElement();
-                    xtw.writeEndElement();
-                }
+                writeLabel(model.getLabelGraphicInfo(elementId), xtw);
 
                 xtw.writeEndElement();
             }
         }
 
         // end BPMN DI elements
+        xtw.writeEndElement();
+        xtw.writeEndElement();
+    }
+
+    private static void writeLabel(GraphicInfo labelGraphicInfo, XMLStreamWriter xtw) throws Exception {
+        if (labelGraphicInfo == null) {
+            return;
+        }
+        xtw.writeStartElement(BPMNDI_PREFIX, ELEMENT_DI_LABEL, BPMNDI_NAMESPACE);
+        xtw.writeStartElement(OMGDC_PREFIX, ELEMENT_DI_BOUNDS, OMGDC_NAMESPACE);
+        xtw.writeAttribute(ATTRIBUTE_DI_HEIGHT, "" + labelGraphicInfo.getHeight());
+        xtw.writeAttribute(ATTRIBUTE_DI_WIDTH, "" + labelGraphicInfo.getWidth());
+        xtw.writeAttribute(ATTRIBUTE_DI_X, "" + labelGraphicInfo.getX());
+        xtw.writeAttribute(ATTRIBUTE_DI_Y, "" + labelGraphicInfo.getY());
         xtw.writeEndElement();
         xtw.writeEndElement();
     }

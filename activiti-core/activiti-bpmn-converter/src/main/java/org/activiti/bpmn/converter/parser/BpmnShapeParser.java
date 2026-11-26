@@ -38,20 +38,34 @@ public class BpmnShapeParser implements BpmnXMLConstants {
         }
 
         BpmnXMLUtil.addXMLLocation(graphicInfo, xtr);
+        boolean inLabel = false;
         while (xtr.hasNext()) {
             xtr.next();
-            if (xtr.isStartElement() && ELEMENT_DI_BOUNDS.equalsIgnoreCase(xtr.getLocalName())) {
-                graphicInfo.setX(Double.valueOf(xtr.getAttributeValue(null, ATTRIBUTE_DI_X)));
-                graphicInfo.setY(Double.valueOf(xtr.getAttributeValue(null, ATTRIBUTE_DI_Y)));
-                graphicInfo.setWidth(Double.valueOf(xtr.getAttributeValue(null, ATTRIBUTE_DI_WIDTH)));
-                graphicInfo.setHeight(Double.valueOf(xtr.getAttributeValue(null, ATTRIBUTE_DI_HEIGHT)));
-
-                model.addGraphicInfo(id, graphicInfo);
-                break;
+            if (xtr.isStartElement() && ELEMENT_DI_LABEL.equalsIgnoreCase(xtr.getLocalName())) {
+                inLabel = true;
+            } else if (xtr.isEndElement() && ELEMENT_DI_LABEL.equalsIgnoreCase(xtr.getLocalName())) {
+                inLabel = false;
+            } else if (xtr.isStartElement() && ELEMENT_DI_BOUNDS.equalsIgnoreCase(xtr.getLocalName())) {
+                if (inLabel) {
+                    GraphicInfo labelGraphicInfo = new GraphicInfo();
+                    BpmnXMLUtil.addXMLLocation(labelGraphicInfo, xtr);
+                    readBounds(xtr, labelGraphicInfo);
+                    model.addLabelGraphicInfo(id, labelGraphicInfo);
+                } else {
+                    readBounds(xtr, graphicInfo);
+                    model.addGraphicInfo(id, graphicInfo);
+                }
             } else if (xtr.isEndElement() && ELEMENT_DI_SHAPE.equalsIgnoreCase(xtr.getLocalName())) {
                 break;
             }
         }
+    }
+
+    private void readBounds(XMLStreamReader xtr, GraphicInfo graphicInfo) {
+        graphicInfo.setX(Double.valueOf(xtr.getAttributeValue(null, ATTRIBUTE_DI_X)));
+        graphicInfo.setY(Double.valueOf(xtr.getAttributeValue(null, ATTRIBUTE_DI_Y)));
+        graphicInfo.setWidth(Double.valueOf(xtr.getAttributeValue(null, ATTRIBUTE_DI_WIDTH)));
+        graphicInfo.setHeight(Double.valueOf(xtr.getAttributeValue(null, ATTRIBUTE_DI_HEIGHT)));
     }
 
     public BaseElement parseElement() {

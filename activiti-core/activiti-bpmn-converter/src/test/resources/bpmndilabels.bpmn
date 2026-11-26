@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="process" name="process" isExecutable="true">
+    <startEvent id="start" name="Start"/>
+    <sequenceFlow id="unnamedFlow" sourceRef="start" targetRef="task"/>
+    <userTask id="task" name="Task"/>
+    <sequenceFlow id="namedFlow" name="Done" sourceRef="task" targetRef="end"/>
+    <endEvent id="end"/>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_process">
+    <bpmndi:BPMNPlane bpmnElement="process" id="BPMNPlane_process">
+      <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+        <omgdc:Bounds height="36.0" width="36.0" x="100.0" y="100.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="76.0" x="80.0" y="140.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="task" id="BPMNShape_task">
+        <omgdc:Bounds height="80.0" width="100.0" x="200.0" y="78.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
+        <omgdc:Bounds height="36.0" width="36.0" x="360.0" y="100.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="unnamedFlow" id="BPMNEdge_unnamedFlow">
+        <omgdi:waypoint x="136.0" y="118.0"/>
+        <omgdi:waypoint x="200.0" y="118.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="50.0" x="143.0" y="95.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="namedFlow" id="BPMNEdge_namedFlow">
+        <omgdi:waypoint x="300.0" y="118.0"/>
+        <omgdi:waypoint x="360.0" y="118.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="30.0" x="315.0" y="95.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
